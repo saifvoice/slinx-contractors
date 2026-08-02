@@ -9,16 +9,18 @@ import { createClient } from "@/lib/supabase/server";
 
 export const revalidate = 60;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   const supabase = await createClient();
-  const { data: job } = await supabase.from("jobs").select("title, summary").eq("slug", params.slug).single();
+  const { data: job } = await supabase.from("jobs").select("title, summary").eq("slug", slug).single();
   if (!job) return {};
-  return { title: job.title, description: job.summary, alternates: { canonical: `/careers/${params.slug}` } };
+  return { title: job.title, description: job.summary, alternates: { canonical: `/careers/${slug}` } };
 }
 
-export default async function CareerDetailPage({ params }: { params: { slug: string } }) {
+export default async function CareerDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const supabase = await createClient();
-  const { data: job } = await supabase.from("jobs").select("*").eq("slug", params.slug).eq("status", "open").single();
+  const { data: job } = await supabase.from("jobs").select("*").eq("slug", slug).eq("status", "open").single();
 
   if (!job) notFound();
 
