@@ -8,24 +8,26 @@ import { createClient } from "@/lib/supabase/server";
 
 export const revalidate = 60;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   const supabase = await createClient();
   const { data: post } = await supabase
     .from("blog_posts")
     .select("title, excerpt")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .single();
 
   if (!post) return {};
-  return { title: post.title, description: post.excerpt, alternates: { canonical: `/blog/${params.slug}` } };
+  return { title: post.title, description: post.excerpt, alternates: { canonical: `/blog/${slug}` } };
 }
 
-export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
+export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const supabase = await createClient();
   const { data: post } = await supabase
     .from("blog_posts")
     .select("*, blog_categories(name), profiles(full_name), blog_post_tags(blog_tags(name))")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .eq("status", "published")
     .single();
 
