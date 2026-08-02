@@ -1,0 +1,52 @@
+import {
+  Network,
+  Cable,
+  Zap,
+  Server,
+  ShieldCheck,
+  Cloud,
+  Code2,
+  Globe,
+  Smartphone,
+  Bot,
+  Phone,
+  Headset,
+  Sun,
+  Building2,
+  Factory,
+  Home,
+  BatteryCharging,
+  Lamp,
+  ClipboardCheck,
+  Wrench,
+  Plug,
+  type LucideIcon,
+} from "lucide-react";
+
+export const iconMap: Record<string, LucideIcon> = {
+  Network,
+  Cable,
+  Zap,
+  Server,
+  ShieldCheck,
+  Cloud,
+  Code2,
+  Globe,
+  Smartphone,
+  Bot,
+  Phone,
+  Headset,
+  Sun,
+  Building2,
+  Factory,
+  Home,
+  BatteryCharging,
+  Lamp,
+  ClipboardCheck,
+  Wrench,
+  Plug,
+};
+
+export function getIcon(name: string): LucideIcon {
+  return iconMap[name] ?? Zap;
+}
