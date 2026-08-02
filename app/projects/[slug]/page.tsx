@@ -10,24 +10,26 @@ import { coverGradientFor } from "@/lib/cover-gradient";
 
 export const revalidate = 60;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
   const supabase = await createClient();
   const { data: project } = await supabase
     .from("projects")
     .select("title, summary")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .single();
 
   if (!project) return {};
-  return { title: project.title, description: project.summary, alternates: { canonical: `/projects/${params.slug}` } };
+  return { title: project.title, description: project.summary, alternates: { canonical: `/projects/${slug}` } };
 }
 
-export default async function ProjectDetailPage({ params }: { params: { slug: string } }) {
+export default async function ProjectDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const supabase = await createClient();
   const { data: project } = await supabase
     .from("projects")
     .select("*, project_services(services(slug, title, category))")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .eq("status", "published")
     .single();
 
