@@ -3,9 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import { AdminPageHeader } from "@/components/admin/page-header";
 import { JobForm } from "../../job-form";
 
-export default async function EditJobPage({ params }: { params: { id: string } }) {
+export default async function EditJobPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await createClient();
-  const { data: job } = await supabase.from("jobs").select("*").eq("id", params.id).single();
+  const { data: job } = await supabase.from("jobs").select("*").eq("id", id).single();
 
   if (!job) notFound();
 
