@@ -1,18 +1,22 @@
+import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AdminPageHeader } from "@/components/admin/page-header";
-import { PostsTable } from "./posts-table";
+import { PostForm } from "../../post-form";
 
-export default async function AdminBlogPage() {
+export default async function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const supabase = await createClient();
-  const { data: rows } = await supabase
-    .from("blog_posts")
-    .select("id, title, status, published_at")
-    .order("created_at", { ascending: false });
+  const [{ data: post }, { data: categories }] = await Promise.all([
+    supabase.from("blog_posts").select("*").eq("id", id).single(),
+    supabase.from("blog_categories").select("id, name").order("name"),
+  ]);
+
+  if (!post) notFound();
 
   return (
     <div>
-      <AdminPageHeader title="Blog" description="Articles shown on the public blog." newHref="/admin/blog/new" newLabel="New post" />
-      <PostsTable rows={rows ?? []} />
+      <AdminPageHeader title="Edit Post" />
+      <PostForm post={post} categories={categories ?? []} />
     </div>
   );
 }
