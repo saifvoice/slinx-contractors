@@ -12,6 +12,9 @@ export type InvoiceStatus = "unpaid" | "paid" | "overdue" | "void";
 export type ServiceArea = "ict" | "renewable-energy" | "both";
 
 export interface Database {
+  __InternalSupabase: {
+    PostgrestVersion: string;
+  };
   public: {
     Tables: {
       profiles: {
@@ -28,6 +31,7 @@ export interface Database {
         };
         Insert: Partial<Database["public"]["Tables"]["profiles"]["Row"]> & { id: string; email: string };
         Update: Partial<Database["public"]["Tables"]["profiles"]["Row"]>;
+        Relationships: [];
       };
       services: {
         Row: {
@@ -52,6 +56,7 @@ export interface Database {
           description: string;
         };
         Update: Partial<Database["public"]["Tables"]["services"]["Row"]>;
+        Relationships: [];
       };
       projects: {
         Row: {
@@ -84,11 +89,13 @@ export interface Database {
           description: string;
         };
         Update: Partial<Database["public"]["Tables"]["projects"]["Row"]>;
+        Relationships: [];
       };
       project_services: {
         Row: { project_id: string; service_id: string };
         Insert: { project_id: string; service_id: string };
         Update: Partial<{ project_id: string; service_id: string }>;
+        Relationships: [];
       };
       project_gallery: {
         Row: {
@@ -104,16 +111,19 @@ export interface Database {
           image_url: string;
         };
         Update: Partial<Database["public"]["Tables"]["project_gallery"]["Row"]>;
+        Relationships: [];
       };
       blog_categories: {
         Row: { id: string; name: string; slug: string };
         Insert: { id?: string; name: string; slug: string };
         Update: Partial<{ name: string; slug: string }>;
+        Relationships: [];
       };
       blog_tags: {
         Row: { id: string; name: string; slug: string };
         Insert: { id?: string; name: string; slug: string };
         Update: Partial<{ name: string; slug: string }>;
+        Relationships: [];
       };
       blog_posts: {
         Row: {
@@ -138,11 +148,13 @@ export interface Database {
           content: string;
         };
         Update: Partial<Database["public"]["Tables"]["blog_posts"]["Row"]>;
+        Relationships: [];
       };
       blog_post_tags: {
         Row: { post_id: string; tag_id: string };
         Insert: { post_id: string; tag_id: string };
         Update: Partial<{ post_id: string; tag_id: string }>;
+        Relationships: [];
       };
       blog_comments: {
         Row: {
@@ -161,6 +173,7 @@ export interface Database {
           body: string;
         };
         Update: Partial<Database["public"]["Tables"]["blog_comments"]["Row"]>;
+        Relationships: [];
       };
       testimonials: {
         Row: {
@@ -181,6 +194,7 @@ export interface Database {
           author_role: string;
         };
         Update: Partial<Database["public"]["Tables"]["testimonials"]["Row"]>;
+        Relationships: [];
       };
       jobs: {
         Row: {
@@ -207,6 +221,7 @@ export interface Database {
           summary: string;
         };
         Update: Partial<Database["public"]["Tables"]["jobs"]["Row"]>;
+        Relationships: [];
       };
       job_applications: {
         Row: {
@@ -229,6 +244,7 @@ export interface Database {
           cover_note: string;
         };
         Update: Partial<Database["public"]["Tables"]["job_applications"]["Row"]>;
+        Relationships: [];
       };
       quote_requests: {
         Row: {
@@ -252,6 +268,7 @@ export interface Database {
           message: string;
         };
         Update: Partial<Database["public"]["Tables"]["quote_requests"]["Row"]>;
+        Relationships: [];
       };
       contact_messages: {
         Row: {
@@ -270,6 +287,7 @@ export interface Database {
           message: string;
         };
         Update: Partial<Database["public"]["Tables"]["contact_messages"]["Row"]>;
+        Relationships: [];
       };
       media_library: {
         Row: {
@@ -288,11 +306,13 @@ export interface Database {
           file_type: string;
         };
         Update: Partial<Database["public"]["Tables"]["media_library"]["Row"]>;
+        Relationships: [];
       };
       site_settings: {
         Row: { key: string; value: unknown; updated_at: string; updated_by: string | null };
         Insert: { key: string; value: unknown; updated_by?: string | null };
         Update: Partial<{ value: unknown; updated_by: string | null }>;
+        Relationships: [];
       };
       quotes: {
         Row: {
@@ -314,6 +334,7 @@ export interface Database {
           amount: number;
         };
         Update: Partial<Database["public"]["Tables"]["quotes"]["Row"]>;
+        Relationships: [];
       };
       invoices: {
         Row: {
@@ -335,6 +356,7 @@ export interface Database {
           amount: number;
         };
         Update: Partial<Database["public"]["Tables"]["invoices"]["Row"]>;
+        Relationships: [];
       };
       downloads: {
         Row: {
@@ -351,6 +373,7 @@ export interface Database {
           file_url: string;
         };
         Update: Partial<Database["public"]["Tables"]["downloads"]["Row"]>;
+        Relationships: [];
       };
       messages: {
         Row: {
@@ -368,6 +391,7 @@ export interface Database {
           body: string;
         };
         Update: Partial<Database["public"]["Tables"]["messages"]["Row"]>;
+        Relationships: [];
       };
     };
     Views: Record<string, never>;
