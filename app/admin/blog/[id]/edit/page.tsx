@@ -1,26 +1,22 @@
-00:55:12.157 
-   Creating an optimized production build ...
-00:55:28.818 
-<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (106kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
-00:55:28.849 
-<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (258kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
-00:55:37.543 
- ✓ Compiled successfully in 22.7s
-00:55:37.635 
-   Linting and checking validity of types ...
-00:55:43.931 
-Failed to compile.
-00:55:43.932 
-00:55:43.932 
-app/admin/blog/[id]/edit/page.tsx
-00:55:43.932 
-Type error: Type '{ params: { id: string; }; }' does not satisfy the constraint 'PageProps'.
-00:55:43.932 
-  Types of property 'params' are incompatible.
-00:55:43.932 
-    Type '{ id: string; }' is missing the following properties from type 'Promise<any>': then, catch, finally, [Symbol.toStringTag]
-00:55:43.932 
-00:55:43.967 
-Next.js build worker exited with code: 1 and signal: null
-00:55:43.995 
-Error: Command "next build" exited with 1
+import { notFound } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { AdminPageHeader } from "@/components/admin/page-header";
+import { PostForm } from "../../post-form";
+
+export default async function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const supabase = await createClient();
+  const [{ data: post }, { data: categories }] = await Promise.all([
+    supabase.from("blog_posts").select("*").eq("id", id).single(),
+    supabase.from("blog_categories").select("id, name").order("name"),
+  ]);
+
+  if (!post) notFound();
+
+  return (
+    <div>
+      <AdminPageHeader title="Edit Post" />
+      <PostForm post={post} categories={categories ?? []} />
+    </div>
+  );
+}
